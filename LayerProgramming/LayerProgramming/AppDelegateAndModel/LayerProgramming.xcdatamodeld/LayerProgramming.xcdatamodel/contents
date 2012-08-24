@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="878" systemVersion="11B26" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="DetailScopeList" representedClassName="DetailScopeList" syncable="YES">
+        <attribute name="color" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="details" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="expectedEndDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="postedBy" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="scopeid" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <relationship name="scopeDetailRelation" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="ScopeList" inverseName="scopeRelation" inverseEntity="ScopeList" syncable="YES"/>
+    </entity>
+    <entity name="ScopeList" representedClassName="ScopeList" syncable="YES">
+        <attribute name="codeReview" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="development" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="planning" optional="YES" attributeType="Boolean" defaultValueString="0" syncable="YES"/>
+        <attribute name="ready" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="testing" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <relationship name="scopeRelation" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="DetailScopeList" inverseName="scopeDetailRelation" inverseEntity="DetailScopeList" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="DetailScopeList" positionX="160" positionY="192" width="128" height="150"/>
+        <element name="ScopeList" positionX="160" positionY="192" width="128" height="150"/>
+    </elements>
+</model>
