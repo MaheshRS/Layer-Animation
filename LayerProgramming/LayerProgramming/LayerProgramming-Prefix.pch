@@ -17,4 +17,4 @@
 #endif
 
 
-#define SL_RELEASE_SAFELY(id _POINTER){ [_POINTER  release]; _POINTER=nil; }
+#define SL_RELEASE_SAFELY(_POINTER){ [_POINTER  release]; _POINTER=nil; }
