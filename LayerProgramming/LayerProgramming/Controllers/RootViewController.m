@@ -7,9 +7,7 @@
 //
 
 #import "RootViewController.h"
-#import "ScopeList.h"
-#import "SLViewList.h"
-#import "SLScrollView.h"
+#import "LPLayer.h"
 #import <QuartzCore/QuartzCore.h>
 
 #define SUBLAYER_WIDTH  50
@@ -36,13 +34,11 @@
 
 @implementation RootViewController
 
-@synthesize managerContext;
-
 - (id)init{
     self = [super init];
     if (self) {
         // Custom initialization
-      [[self view]setBackgroundColor:[UIColor grayColor]];
+      [[self view]setBackgroundColor:[UIColor clearColor]];
     }
     return self;
 }
@@ -57,7 +53,6 @@
 
 - (void)dealloc
 {
-  SL_RELEASE_SAFELY(scrollView);
   [super dealloc];
 }
 
@@ -90,13 +85,13 @@
     CATransformLayer *generatedTransformLayer = [self generate3DCubicalTransformLayer];
     
     CALayer *generatedlayer = [CALayer layer];
-    [generatedlayer setFrame:CGRectMake(100,100, 100, 100)];
+    [generatedlayer setFrame:CGRectIntegral(CGRectMake(CGRectGetWidth(self.view.bounds)/2,CGRectGetHeight(self.view.bounds)/2, 100, 100))];
     [generatedlayer addSublayer:generatedTransformLayer];
     
     CABasicAnimation *basicanimation = [CABasicAnimation animationWithKeyPath:@"transform"];
     [basicanimation setAutoreverses:YES];
-    [basicanimation setFromValue:[NSValue valueWithCATransform3D:CATransform3DMakeRotation(-M_PI, 1, 0, 1)]];
-    [basicanimation setToValue:[NSValue valueWithCATransform3D:CATransform3DMakeRotation(( 2 *M_PI), 1, 0, 1)]];
+    [basicanimation setFromValue:[NSValue valueWithCATransform3D:CATransform3DMakeRotation(M_PI, 1, 0, 1)]];
+    [basicanimation setToValue:[NSValue valueWithCATransform3D:CATransform3DMakeRotation(( 4 *M_PI), 1, 0, 1)]];
     [basicanimation setDuration:3.0f];
     [basicanimation setRepeatCount:HUGE_VAL];
     [basicanimation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
@@ -124,66 +119,6 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-#pragma mark - CoreData Implementation
-- (void)fetchedResultsManagedObject
-{
-  // the entity
-  NSString *entityName=scope;
-
-  // error
-  NSError *error;
-  
-  // request the entity
-  // Create and configure a fetch request.
-  NSFetchRequest *request = [[NSFetchRequest alloc] init];
-  NSEntityDescription *entity = [NSEntityDescription entityForName:entityName
-                                            inManagedObjectContext:managerContext];
-  [request setEntity:entity];
-  [request setFetchBatchSize:30];
-  //get the data
-  NSArray *fetchedobjects=[managerContext executeFetchRequest:request error:&error];
-  for(NSManagedObject *info in fetchedobjects)
-  {
-    NSLog(@"id %i\n ",[[info valueForKey:SLId]integerValue]);
-  }
-  // sort and filter if you want
-  SL_RELEASE_SAFELY(request);
-}
-
-- (void)insertSprints
-{
-  NSManagedObject *scopeList= [NSEntityDescription insertNewObjectForEntityForName:scope inManagedObjectContext:managerContext];
-  [scopeList setValue:[NSNumber numberWithBool:NO] forKey:SLCodeReview];
-  [scopeList setValue:[NSNumber numberWithBool:NO] forKey:SLDevelopment];
-  [scopeList setValue:[NSNumber numberWithBool:YES] forKey:SLPlanning];
-  [scopeList setValue:[NSNumber numberWithBool:NO] forKey:SLReady];
-  [scopeList setValue:[NSNumber numberWithBool:NO] forKey:SLTesting];
-  [scopeList setValue:[NSNumber numberWithInt:0001] forKey:SLId];
-  
-  NSManagedObject *scopeDetailList=[NSEntityDescription insertNewObjectForEntityForName:detailScope inManagedObjectContext:managerContext];
-  [scopeDetailList setValue:@"gray" forKey:SLDetailColor];
-  [scopeDetailList setValue:[NSDate date] forKey:SLDetailDate];
-  [scopeDetailList setValue:[NSDate date] forKey:SLDetailExpectedEndDate];
-  [scopeDetailList setValue:@"Learn Core Data Basics" forKey:SLDetailDetails];
-  [scopeDetailList setValue:[NSNumber numberWithInt:0001] forKey:SLDetailscopeId];
-  [scopeDetailList setValue:@"Mahesh Shanbhag" forKey:SLDetailpostedBy];
-  
-  NSError *error;
-  if(![managerContext save:&error])
-  {
-    NSLog(@"Error in Saving [-->] %@",[error localizedDescription]);
-  }
-  else
-  {
-    [self fetchedResultsManagedObject];
-  }
-}
-
-#pragma mark - touches detected
-- (BOOL)canBecomeFirstResponder
-{
-  return YES;
-}
 
 #pragma mark - tap Gesture
 - (void)tapPressed:(UIGestureRecognizer *)gesture
@@ -241,33 +176,22 @@
     CGPoint centralPoint =CGPointMake([transformLayer bounds].size.width/2, [transformLayer bounds].size.height/2); 
 
     // this is the first face of the cube
-    CALayer *layer1 = [CALayer layer]; 
+    LPLayer *layer1 = [LPLayer layer]; 
     [layer1 setBounds:FRAME];
     [layer1 setBorderWidth:BORDERWIDTH];
-    [layer1 setBackgroundColor:[UIColor colorWithRed:1 green:0 blue:0 alpha:0.7].CGColor];
+    [layer1 addBGColor:[UIColor colorWithRed:1 green:0 blue:0 alpha:0.7]];
     [layer1 setBorderColor:[[UIColor lightGrayColor]CGColor]];
     [layer1 setPosition:centralPoint]; // this is added so the center is same for all the sublayers, and is translated and rotate along the same position
-    
-    // adding text to layer 1
-    CATextLayer *layerText1 = [CATextLayer layer];
-    [layerText1 setFont:@"Helvetica-Bold"];
-    [layerText1 setFontSize:20];
-    [layerText1 setFrame:CGRectMake(0, [transformLayer frame].size.height/2, [transformLayer frame].size.width, [transformLayer frame].size.height)];
-    [layerText1 setString:@"1"];
-    [layerText1 setAlignmentMode:kCAAlignmentCenter];
-    [layerText1 setForegroundColor:[[UIColor whiteColor] CGColor]];
-    [layer1 addSublayer:layerText1];
-    
-
+    [layer1 setNeedsDisplay];
     
     // this is the second face of the cube
-    CALayer *layer2 = [CALayer layer];
+    LPLayer *layer2 = [LPLayer layer];
     [layer2 setBorderColor:[[UIColor lightGrayColor]CGColor]];
     [layer2 setBounds:FRAME];
     [layer2 setBorderWidth:1];
-    [layer2 setBackgroundColor:[UIColor lightGrayColor].CGColor];
-    [layer2 setBackgroundColor:[[UIColor colorWithRed:0 green:1 blue:0 alpha:0.7]CGColor]];
+    [layer2 addBGColor:[UIColor lightGrayColor]];
     [layer2 setPosition:centralPoint]; // this is added so the center is same for all the sublayers, and is translated and rotate along the same position
+    [layer2 setNeedsDisplay];
     
     CGFloat degrees =90.0f;
     CGFloat radians = (degrees/180)*M_PI;
@@ -278,17 +202,7 @@
     transform = CATransform3DTranslate(transform, 0, 0, SQUARE_SIZE/2);
     transform = CATransform3DTranslate(transform, SQUARE_SIZE/2, 0, 0);
     layer2.transform = transform;
-    
-    // adding text to layer 2
-    CATextLayer *layerText2 = [CATextLayer layer];
-    [layerText2 setFont:@"Helvetica-Bold"];
-    [layerText2 setFontSize:20]; 
-    [layerText2 setFrame:CGRectMake(0, [transformLayer frame].size.height/2, [transformLayer frame].size.width, [transformLayer frame].size.height)];
-    [layerText2 setString:@"2"];
-    [layerText2 setAlignmentMode:kCAAlignmentCenter];
-    [layerText2 setForegroundColor:[[UIColor whiteColor] CGColor]];
-    [layer2 addSublayer:layerText2];
-    
+        
     // this is the third face of the cube
     CALayer *layer3 = [CALayer layer];
     [layer3 setBounds:FRAME];
@@ -316,7 +230,7 @@
     CALayer *layer4 = [CALayer layer];
     [layer4 setBounds:FRAME];
     [layer4 setPosition:centralPoint];
-    [layer4 setBackgroundColor:[[UIColor colorWithRed:1 green:1 blue:1 alpha:0.7]CGColor]];
+    [layer4 setBackgroundColor:[[UIColor colorWithRed:207./255. green:181./255. blue:59./255. alpha:1.] CGColor]];
     [layer4 setBorderWidth:1];
     [layer4 setBorderColor:[[UIColor lightGrayColor]CGColor]];
     
@@ -364,12 +278,13 @@
     [layer5 addSublayer:layerText5];
     
     // now adding the bottom face of the cube
-    CALayer *layer6 = [CALayer layer];
+    LPLayer *layer6 = [LPLayer layer];
     [layer6 setBounds:FRAME];
-    [layer6 setBackgroundColor:[[UIColor purpleColor]CGColor]];
+    [layer6 addBGColor:[UIColor purpleColor]];
     [layer6 setBorderColor:[[UIColor lightGrayColor]CGColor]];
     [layer6 setBorderWidth:1];
     [layer6 setPosition:centralPoint];
+    [layer6 setNeedsDisplay];
     
     // adding the transform to the layer5 to get it aligned with others
     transform = CATransform3DIdentity;
@@ -378,15 +293,15 @@
     transform = CATransform3DTranslate(transform, 0, 0, -SQUARE_SIZE/2);
     layer6.transform = transform;
 
-    // adding text to layer 6
-    CATextLayer *layerText6 = [CATextLayer layer];
-    [layerText6 setFont:@"Helvetica-Bold"];
-    [layerText6 setFontSize:20];  
-    [layerText6 setFrame:CGRectMake(0, [transformLayer frame].size.height/2, [transformLayer frame].size.width, [transformLayer frame].size.height)];
-    [layerText6 setString:@"6"];
-    [layerText6 setAlignmentMode:kCAAlignmentCenter];
-    [layerText6 setForegroundColor:[[UIColor whiteColor] CGColor]];
-    [layer6 addSublayer:layerText6];
+//    // adding text to layer 6
+//    CATextLayer *layerText6 = [CATextLayer layer];
+//    [layerText6 setFont:@"Helvetica-Bold"];
+//    [layerText6 setFontSize:20];  
+//    [layerText6 setFrame:CGRectMake(0, [transformLayer frame].size.height/2, [transformLayer frame].size.width, [transformLayer frame].size.height)];
+//    [layerText6 setString:@"6"];
+//    [layerText6 setAlignmentMode:kCAAlignmentCenter];
+//    [layerText6 setForegroundColor:[[UIColor whiteColor] CGColor]];
+//    [layer6 addSublayer:layerText6];
     
     
     // add the above 4 faces of the cube to the transform layer

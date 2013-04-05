@@ -8,17 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@class SLScrollView;
-
 @interface RootViewController : UIViewController
 {
-  SLScrollView *scrollView;
-  UITapGestureRecognizer *tapGesturer;
 }
 
-@property(nonatomic,retain)NSManagedObjectContext *managerContext;
-
-- (void)fetchedResultsManagedObject;
-- (void)insertSprints;
-- (void)tapPressed:(UIGestureRecognizer *)gesture;
 @end

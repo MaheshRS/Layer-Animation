@@ -10,4 +10,6 @@
 
 @interface LPLayer : CALayer
 
+- (void)addBGColor:(UIColor *)color;
+
 @end
