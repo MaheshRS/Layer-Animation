@@ -1,4 +1,9 @@
 Layer-Animation
 ===============
 
-This animation project is used to create 2D and 3D  objects using layers in iOS.
+This project is used to create 3D objects using CATransforLayer in iOS.
+
+It also shows how to use the clipping methods in core animation to clip 
+shapes in a view.
+
+More to come on this.
