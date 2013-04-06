@@ -11,5 +11,6 @@
 @interface LPLayer : CALayer
 
 - (void)addBGColor:(UIColor *)color;
+- (void)addShapeType:(NSInteger)type;
 
 @end

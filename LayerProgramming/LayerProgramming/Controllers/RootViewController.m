@@ -179,6 +179,7 @@
     LPLayer *layer1 = [LPLayer layer]; 
     [layer1 setBounds:FRAME];
     [layer1 setBorderWidth:BORDERWIDTH];
+    [layer1 addShapeType:1];
     [layer1 addBGColor:[UIColor colorWithRed:1 green:0 blue:0 alpha:0.7]];
     [layer1 setBorderColor:[[UIColor lightGrayColor]CGColor]];
     [layer1 setPosition:centralPoint]; // this is added so the center is same for all the sublayers, and is translated and rotate along the same position
@@ -188,6 +189,7 @@
     LPLayer *layer2 = [LPLayer layer];
     [layer2 setBorderColor:[[UIColor lightGrayColor]CGColor]];
     [layer2 setBounds:FRAME];
+    [layer2 addShapeType:3];
     [layer2 setBorderWidth:1];
     [layer2 addBGColor:[UIColor lightGrayColor]];
     [layer2 setPosition:centralPoint]; // this is added so the center is same for all the sublayers, and is translated and rotate along the same position
@@ -282,6 +284,7 @@
     [layer6 setBounds:FRAME];
     [layer6 addBGColor:[UIColor purpleColor]];
     [layer6 setBorderColor:[[UIColor lightGrayColor]CGColor]];
+    [layer6 addShapeType:3];
     [layer6 setBorderWidth:1];
     [layer6 setPosition:centralPoint];
     [layer6 setNeedsDisplay];
