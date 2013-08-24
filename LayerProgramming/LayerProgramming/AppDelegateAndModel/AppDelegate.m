@@ -28,7 +28,7 @@
     _rootController=[[RootViewController alloc]init];
     [[self window]setRootViewController:_rootController];
     
-    self.window.backgroundColor = [UIColor scrollViewTexturedBackgroundColor];
+    self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
     return YES;
 }
